@@ -1,16 +1,31 @@
-# This is a sample Python script.
+#IMPORT libraries
+import os
+import openai
+import pyttsx3
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+#Set API Key
+openai.api_key="<INSERT API KEY HERE>"
 
+#Get Audiot File
+audio_file=open("C:/Users/chris/Downloads/Recording.mp3", "rb")
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+#Transcribe
+transcript=openai.Audio.translate("whisper-1", audio_file)
+print(transcript)
 
+#Completion
+response=openai.Completion.create(
+    model="text-davinci-003",
+    prompt=transcript,
+    temperature=0,
+)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+#Cleanup
+final_response = response.choices[0].text
+final_response = final_response.replace('\n','')
+print(final_response)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+#Speak
+engine = pyttsx3.init()
+engine.say(final_response)
+engine.runAndWait()
