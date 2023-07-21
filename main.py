@@ -1,5 +1,4 @@
 #IMPORT libraries
-import os
 import openai
 import pyttsx3
 
